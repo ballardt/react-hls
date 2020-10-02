@@ -68,11 +68,14 @@ function ReactHlsPlayer({
         _initPlayer();
 
         return () => {
+            hlsEventListeners.forEach(e => {
+                hls.off(e.event, (event, data) => e.handler(hls, event, data));
+            });
             if (hls != null) {
                 hls.destroy();
             }
         };
-    }, [autoplay, hlsConfig, playerRef, url]);
+    }, [autoplay, hlsConfig, url]);
 
     return (
         <video

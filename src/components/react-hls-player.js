@@ -7,6 +7,7 @@ function ReactHlsPlayer({
     hlsConfig = {},
     videoProps = {},
     playerRef = React.createRef(),
+    hlsEventListeners = [],
     style = {},
     width = '100%',
     height = 'auto',
@@ -29,6 +30,7 @@ function ReactHlsPlayer({
 
             newHls.attachMedia(playerRef.current);
 
+            /*
             newHls.on(Hls.Events.MEDIA_ATTACHED, () => {
                 newHls.loadSource(url);
 
@@ -38,6 +40,7 @@ function ReactHlsPlayer({
                     }
                 });
             });
+            */
 
             newHls.on(Hls.Events.ERROR, function (event, data) {
                 if (data.fatal) {
@@ -53,6 +56,10 @@ function ReactHlsPlayer({
                             break;
                     }
                 }
+            });
+
+            hlsEventListeners.forEach(e => {
+                newHls.on(e.event, (event, data) => e.handler(newHls, event, data));
             });
 
             hls = newHls;
